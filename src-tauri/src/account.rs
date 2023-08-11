@@ -41,7 +41,9 @@ pub struct FileAccountManager {
 impl FileAccountManager {
     fn get_path_or_create(&self, account:&str) -> PathBuf {
         let root_path = if self.root.is_empty() {get_default_path()} else {self.root.clone()};
+        let root_path = root_path + "/.password";
         let root = Path::new(root_path.as_str());
+        println!("root paht {:?}", root_path.as_str());
         if !root.exists() {
             fs::create_dir(root_path.as_str()).expect(format!("create dir {:?} failed", root_path.as_str()).as_str());
         }

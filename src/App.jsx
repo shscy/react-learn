@@ -98,22 +98,6 @@ function SignIn() {
 
   const navidate = useNavigate();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-    let account = data.get("email");
-    let passwd = data.get("password");
-    loginRegister(account, passwd, () => {
-      setLogin(true);
-      setAccount(account);
-    }, () => {
-      console.log("login failed, retry");
-    })
-  };
 
   function menuOnclick(eventType) {
     switch (eventType) {
@@ -124,6 +108,7 @@ function SignIn() {
       case "list":
         return function (event) {
           console.log("event list click");
+          setAdd(false);
         }
       case "add":
         return function (event) {
@@ -133,75 +118,75 @@ function SignIn() {
     }
   }
 
-  function loginApp() {
-    const nav = LeftNav(menuOnclick, function () {
-      if (open) {
-        setOpen(false);
-      } else {
-        setOpen(true);
-      }
-    }, open);
+  // function loginApp() {
+  //   const nav = LeftNav(menuOnclick, function () {
+  //     if (open) {
+  //       setOpen(false);
+  //     } else {
+  //       setOpen(true);
+  //     }
+  //   }, open);
 
-    return (
-      <ThemeProvider theme={defaultTheme}>
-        <Box sx={{ display: 'flex' }}>
-          {nav}
-          <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <Box>
-              <Box
-                sx={{
-                  marginTop: 6,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                }}
-              >
-                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                  <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h2" variant="h5">
-                  Sign in
-                </Typography>
-                <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="email"
-                    label="google验证码"
-                    name="email"
-                    // autoComplete="email"
-                    autoFocus
-                  />
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="password"
-                    label="密码"
-                    type="password"
-                    id="password"
-                  // autoComplete="current-password"
-                  />
+  //   return (
+  //     <ThemeProvider theme={defaultTheme}>
+  //       <Box sx={{ display: 'flex' }}>
+  //         {nav}
+  //         <Container component="main" maxWidth="xs">
+  //           <CssBaseline />
+  //           <Box>
+  //             <Box
+  //               sx={{
+  //                 marginTop: 6,
+  //                 display: 'flex',
+  //                 flexDirection: 'column',
+  //                 alignItems: 'center',
+  //               }}
+  //             >
+  //               <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+  //                 <LockOutlinedIcon />
+  //               </Avatar>
+  //               <Typography component="h2" variant="h5">
+  //                 Sign in
+  //               </Typography>
+  //               <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+  //                 <TextField
+  //                   margin="normal"
+  //                   required
+  //                   fullWidth
+  //                   id="email"
+  //                   label="google验证码"
+  //                   name="email"
+  //                   // autoComplete="email"
+  //                   autoFocus
+  //                 />
+  //                 <TextField
+  //                   margin="normal"
+  //                   required
+  //                   fullWidth
+  //                   name="password"
+  //                   label="密码"
+  //                   type="password"
+  //                   id="password"
+  //                 // autoComplete="current-password"
+  //                 />
 
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                  >
-                    Sign In
-                  </Button>
+  //                 <Button
+  //                   type="submit"
+  //                   fullWidth
+  //                   variant="contained"
+  //                   sx={{ mt: 3, mb: 2 }}
+  //                 >
+  //                   Sign In
+  //                 </Button>
 
-                </Box>
-              </Box>
-            </Box>
-          </Container>
-        </Box>
-      </ThemeProvider>
-    );
-  }
+  //               </Box>
+  //             </Box>
+  //           </Box>
+  //         </Container>
+  //       </Box>
+  //     </ThemeProvider>
+  //   );
+  // }
 
   const AddItem = () => {
     const nav = LeftNav(menuOnclick, function () {
@@ -274,6 +259,7 @@ function SignIn() {
       </ThemeProvider>
     )
   }
+  console.log("is login ", login)
   if (login) {
     if (add) {
       return AddItem()

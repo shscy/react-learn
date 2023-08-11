@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import TableContainer from '@mui/material/TableContainer';
 import TextField from '@mui/material/TextField';
-
+import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -20,6 +20,10 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { writeText, readText } from '@tauri-apps/api/clipboard';
+
+
 
 // import { invoke } from '@tauri-apps/api/tauri';
 import { loginRegister, saveUserInfo, getUserInfo } from './bridge.js'
@@ -54,6 +58,12 @@ function PassItems(props) {
    const deleteItem = props.deleteItem;
    const rows = props.rows;
 
+   const copyToClipboard = (data)=>{
+      return async (e)=> {
+         await writeText(data);
+      }
+   }
+
    return (
       <Box sx={{ width: '100%' }}>
          <Paper sx={{ width: '100%', mb: 2 }}>
@@ -77,7 +87,16 @@ function PassItems(props) {
                            <TableCell component="th" scope="row">
                               {row.name}
                            </TableCell>
-                           <TableCell align="center">{row.passwd}</TableCell>
+                           <TableCell align="center">
+                              <Typography variant="button" gutterBottom>
+                                 ***
+                              </Typography>
+
+                                 <Button onClick={copyToClipboard(row.passwd)}>
+                                    复制
+                                 </Button>
+
+                           </TableCell>
                            <TableCell align="center">{row.mark}</TableCell>
                            <TableCell padding="checkbox">
                               <Button variant="outlined" onClick={editItem(row.uuid)}>编辑</Button>
@@ -127,7 +146,7 @@ export default function Passwd(props) {
       //    console.log("rust data resoonse ", data.items);
       //    setRows(data.items);
       // });
-      getUserInfo(account, (r_rows)=>{
+      getUserInfo(account, (r_rows) => {
          setAppState(pre => ({
             ...pre,
             rows: r_rows,
@@ -180,7 +199,7 @@ export default function Passwd(props) {
       }
    }
 
-   function handleClose(){
+   function handleClose() {
       setAppState(pre => ({
          ...pre,
          open: false,
@@ -218,8 +237,8 @@ export default function Passwd(props) {
          rows: new_rows,
          isEdit: isUpdate,
          update: {
-            name:"",
-            passwd:"",
+            name: "",
+            passwd: "",
          },
          select: {
          }

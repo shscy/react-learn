@@ -71,6 +71,15 @@ impl UserMemory {
 }
 
 #[tauri::command(rename_all = "snake_case")]
+fn verify_account(account: String) -> bool {
+    let m = &ACCOUNT_MANAGER;
+    if !m.is_user_exists(account.as_str(), false) {
+        return false;
+    }
+    return true;
+}
+
+#[tauri::command(rename_all = "snake_case")]
 fn get_passwd(account: String) -> Option<account::AccountInfo> {
     let data = UM.query(account.as_str());
     if data.is_none() {
@@ -121,7 +130,6 @@ fn login_or_register(account: String, password:String) -> bool {
 }
 
 fn main() {
-    println!("feeeeeeeeeeeeeee");
     tauri::Builder::default()
         .setup(|app|{
             let main_window = app.get_window("main").unwrap();
@@ -129,6 +137,7 @@ fn main() {
             return Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            verify_account,
             save_user,
             login_or_register,
             get_passwd,

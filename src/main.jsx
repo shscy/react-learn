@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom/client'
 import SignIn from './App.jsx'
 import Passwd from './Passwd.jsx'
 import Dashboard from './Dash.jsx'
-import {LoginAccountApp} from './login.jsx'
+import {LoginAccountApp} from './login.jsx';
+import {NewUserApp} from './NewUser.jsx';
 
 import {
     createBrowserRouter,
@@ -16,13 +17,9 @@ import {
       element: <SignIn/>,
     },
     {
-        path: "/a",
-        element: <Dashboard/>
+        path: "/newUser",
+        element: <NewUserApp/>
     },
-    // {
-    //   path: "/new",
-    //   element: <SignIn/>
-    // }
   ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(

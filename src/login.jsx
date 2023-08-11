@@ -20,23 +20,16 @@ import IconButton from '@mui/material/IconButton';
 import Divider from '@mui/material/Divider';
 import Toolbar from '@mui/material/Toolbar';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { loginRegister } from './bridge';
+import { loginRegister, verifyAccount} from './bridge';
 
+import {
+    redirect,
+    useNavigate,
+  } from "react-router-dom";
 
 const defaultTheme = createTheme();
-const verifyAccountIsExists = (account) => {
-    return [true, ""]
-    // if (account == "zxlscy") {
-    //     return [true, ""]
-    // }
-    // return [false, "账号不存在"]
-}
-const verifyAccountPassword = (account, password) => {
-
-    if (account == "zxlscy" && password == "123") {
-        return [true, ""]
-    }
-    return [false, "密码不正确请重试"]
+const verifyAccountIsExists = async (account) => {
+    return  await verifyAccount(account, ()=>{}, ()=>{})
 }
 
 export function LoginAccountApp(props) {
@@ -47,11 +40,17 @@ export function LoginAccountApp(props) {
         reason: "",
     })
 
-    const handleAccountNext = (evnet) => {
+    const navigate = useNavigate();
+    const newUser = ()=>{
+        console.log("new user");
+            navigate("/newUser");
+    }
+
+    const handleAccountNext = async (evnet) => {
         const account = formData.account;
         console.log("handlerNext account ", account);
 
-        const [ok, reason] = verifyAccountIsExists(account);
+        const [ok, reason] = await verifyAccountIsExists(account);
         if (ok) {
             setSetp("stepPassword");
             setError({
@@ -66,39 +65,26 @@ export function LoginAccountApp(props) {
         }
     }
 
-    const handlePasswordNext = (evnet) => {
+    const handlePasswordNext = async (event) => {
+        event.pre
         const password = formData.password;
         const account = formData.account;
-        loginRegister(account, password, () => {
+        console.log("paswword login", account, password);
+        const [ok, errMsg] = await  loginRegister(account, password);
+        if(ok) {
             setError({
                 error: false,
             })
+            console.log("login success");
             props.setLogin(true);
             props.setAccountInfo(account);
             setFormData({})
-        }, () => {
-            const reason = "密码错误请重试";
+        }else {
             setError({
                 error: true,
-                reason: reason,
+                reason: errMsg,
             })
-        })
-        // console.log("handlerNext account ", formData.account, formData.password);
-        // const [ok, reason] = verifyAccountPassword(account, password);
-        // if (ok) {
-        //     // setSetp("stepPassword");
-        //     setError({
-        //         error: false,
-        //     })
-        //     props.setLogin(true);
-        //     props.setAccountInfo(account);
-        //     setFormData({})
-        // } else {
-        //     setError({
-        //         error: true,
-        //         reason: reason,
-        //     })
-        // }
+        }
     }
 
     const handleChange = (event) => {
@@ -118,7 +104,6 @@ export function LoginAccountApp(props) {
                 label="账号"
                 name="account"
                 onChange={handleChange}
-                // autoComplete="email"
                 autoFocus
             />
         } else {
@@ -142,7 +127,6 @@ export function LoginAccountApp(props) {
         return (
             <ThemeProvider theme={defaultTheme}>
                 <Box sx={{ display: 'flex' }}>
-
                     <Container component="main" maxWidth="xs">
                         <CssBaseline />
                         <Box>
@@ -165,15 +149,16 @@ export function LoginAccountApp(props) {
                                 <Grid container justifyContent="space-between" sx={{ marginTop: 2 }}>
                                     <Grid item xs={3} >
                                         <Button
-                                            type="submit"
+                                            // type="submit"
                                             sx={{ mt: 2, mb: 2 }}
+                                            onClick={newUser}
                                         >
                                             创建账号
                                         </Button>
                                     </Grid>
                                     <Grid item xs={3}>
                                         <Button
-                                            type="submit"
+                                            // type="submit"
                                             fullWidth
                                             variant="contained"
                                             color="primary"
@@ -193,6 +178,7 @@ export function LoginAccountApp(props) {
     }
 
     const stepPassword = () => {
+        console.log("step password");
         const textApp = () => {
             if (!err.error) {
                 return <TextField
@@ -203,7 +189,6 @@ export function LoginAccountApp(props) {
                     label="密码"
                     name="password"
                     onChange={handleChange}
-                    // autoComplete="email"
                     autoFocus
                 />
             } else {
@@ -213,7 +198,7 @@ export function LoginAccountApp(props) {
                     id="password"
                     required
                     fullWidth
-                    label="Miami"
+                    label="密码"
                     name="password"
                     onChange={handleChange}
                     helperText="密码错误，请重试"
@@ -237,6 +222,7 @@ export function LoginAccountApp(props) {
                                     flexDirection: 'column',
                                     alignItems: 'center',
                                 }}
+                                component="form"
                             >
                                 {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                                 <LockOutlinedIcon />
@@ -259,7 +245,7 @@ export function LoginAccountApp(props) {
                                     </Grid>
                                     <Grid item xs={3}>
                                         <Button
-                                            type="submit"
+                                            // type="submit"
                                             fullWidth
                                             variant="contained"
                                             color="primary"
