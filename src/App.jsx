@@ -31,6 +31,7 @@ import {
 import MainListItems from './menu.jsx';
 import { loginRegister, saveUserInfo, getUserInfo } from './bridge.js'
 import AddItemApp from './addItem.jsx';
+import { LoginAccountApp } from './login.jsx';
 
 
 
@@ -280,7 +281,11 @@ function SignIn() {
       return passwordListApp();
     }
   }
-  return loginApp()
+  return (
+    <LoginAccountApp setLogin={setLogin} setAccountInfo={setAccount}>
+
+    </LoginAccountApp>
+  )
 }
 
 

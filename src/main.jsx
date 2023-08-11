@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import SignIn from './App.jsx'
 import Passwd from './Passwd.jsx'
 import Dashboard from './Dash.jsx'
+import {LoginAccountApp} from './login.jsx'
 
 import {
     createBrowserRouter,

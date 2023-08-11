@@ -15,12 +15,13 @@ use account::AccountManager;
 use google_authenticator::GoogleAuthenticator;
 use md5;
 use serde::{Deserialize, Serialize};
+use tauri::{Manager, Size, PhysicalSize};
 #[macro_use]
 extern crate lazy_static;
 
 lazy_static! {
     static ref ACCOUNT_MANAGER: account::FileAccountManager =
-        account::FileAccountManager { root: "" };
+        account::FileAccountManager { root: "".to_string() };
     static ref UM: UserMemory = UserMemory::new();
 }
 
@@ -122,6 +123,11 @@ fn login_or_register(account: String, password:String) -> bool {
 fn main() {
     println!("feeeeeeeeeeeeeee");
     tauri::Builder::default()
+        .setup(|app|{
+            let main_window = app.get_window("main").unwrap();
+            main_window.set_size(Size::Physical(PhysicalSize { width: 2100, height: 1600 })).unwrap();
+            return Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             save_user,
             login_or_register,

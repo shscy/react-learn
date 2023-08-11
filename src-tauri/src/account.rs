@@ -1,6 +1,6 @@
 use std::io::{Write, Read};
 use std::path::{Path, PathBuf};
-use std::fs;
+use std::{fs, os};
 use std::fs::File;
 use serde::{Deserialize, Serialize};
 use super::aes_util;
@@ -28,17 +28,22 @@ pub trait  AccountManager {
 
 const DEFAULT_PATH: &'static str = "/Users/zuoxiaoliang/.password/";
 
+fn get_default_path() ->String {
+    use std::env;
+    let home = env::var("HOME").unwrap();
+    return home;
+}
 // FileAccountManger 采用全量更新的方式
 pub struct FileAccountManager {
-    pub root: &'static str,
+    pub root: String,
 }
 
 impl FileAccountManager {
     fn get_path_or_create(&self, account:&str) -> PathBuf {
-        let root_path = if self.root.is_empty() {DEFAULT_PATH} else {self.root};
-        let root = Path::new(root_path);
+        let root_path = if self.root.is_empty() {get_default_path()} else {self.root.clone()};
+        let root = Path::new(root_path.as_str());
         if !root.exists() {
-            fs::create_dir(root_path).expect(format!("create dir {:?} failed", root_path).as_str());
+            fs::create_dir(root_path.as_str()).expect(format!("create dir {:?} failed", root_path.as_str()).as_str());
         }
         let account_path = root.join(format!(".{}", account));
         return account_path;
